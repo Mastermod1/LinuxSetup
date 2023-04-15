@@ -1,3 +1,6 @@
+-- Global Variables
+local clangdPath = "/build/ltesdkroot/Tools/CLANG_TOOLS/CLANG_TOOLS_14.0_40/bin/clangd"
+
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local is_bootstrap = false
@@ -236,7 +239,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'python', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'python', 'vim', 'lua', 'javascript', 'rust'},
 
   highlight = { enable = true },
   indent = { enable = true, disable = { 'python' } },
@@ -352,18 +355,18 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 
+-- Cpp include <C-f>
 local cwd = vim.fn.getcwd()
-
 vim.cmd("set path+=" .. cwd .. "/src")
 
-local clangdPath = "/build/ltesdkroot/Tools/CLANG_TOOLS/CLANG_TOOLS_14.0_40/bin/clangd"
-
 local servers = {
-  clangd = {
-    {cmd = { clangdPath },
-   filetypes = {'c', 'cpp', 'objc', 'objcpp'},}
-  },
   -- pyright = {},
+  lua_ls = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+      },
+  },
 }
 
 -- Setup neovim lua configuration
@@ -393,6 +396,7 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- Cpp clangd setup
 require'lspconfig'.clangd.setup{
   capabilities = capabilities,
   on_attach = on_attach,
@@ -448,4 +452,3 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
