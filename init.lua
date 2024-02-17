@@ -19,6 +19,7 @@ if not vim.loop.fs_stat(lazypath) then
   }
 end
 vim.opt.rtp:prepend(lazypath)
+vim.g.black_linelength = 120
 
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -31,6 +32,7 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
+  'f-person/git-blame.nvim',
 
   -- Detect tabstop and shiftwidth automatically
   -- 'tpope/vim-sleuth',
@@ -182,12 +184,21 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 }, {})
 
+require('gitblame').setup {
+     --Note how the `gitblame_` prefix is omitted in `setup`
+    enabled = true,
+}
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
 -- Set quick save
 vim.keymap.set('n', '<leader>s', ':update<CR>', { desc = '[S] ave file' })
+
+-- System clipboard copy/paste
+vim.keymap.set('n', '<leader>p', '"+p', { desc = '[P] aste from system clipboard' })
+vim.keymap.set('n', '<leader>y', '"+y', { desc = '[C] opy to system clipboard' })
 
 -- Set relativenumber
 vim.o.relativenumber = true
@@ -420,11 +431,17 @@ end
 
 -- Cpp include <C-f>
 local cwd = vim.fn.getcwd()
-vim.cmd("set path+=" .. cwd .. "/src")
+vim.cmd("set path+=" .. cwd)
 
 local servers = {
   clangd = {},
-  pylsp = {},
+  pylsp = {
+    {
+      pylint = {
+        enabled = false
+      }
+    }
+  },
   html = { filetypes = { 'html', 'twig', 'hbs'} },
   lua_ls = {
     Lua = {
@@ -469,6 +486,14 @@ mason_lspconfig.setup_handlers {
       filetypes = (servers[server_name] or {}).filetypes,
     }
   end
+}
+
+-- Cpp clangd setup
+require'lspconfig'.clangd.setup{
+  capabilities = capabilities,
+  on_attach = on_attach,
+  cmd = { "/usr/bin/clangd-12" },
+  filetypes = {'c', 'cpp', 'objc', 'objcpp'}
 }
 
 -- [[ Configure nvim-cmp ]]
