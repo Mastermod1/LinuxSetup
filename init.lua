@@ -121,9 +121,16 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    main = "ibl",
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+      indent = {
+        char = '┊',
+        -- show_trailing_blankline_indent = true,
+      },
+      scope = {
+        show_start = true,
+        show_end = true,
+      },
     },
   },
 
@@ -189,7 +196,7 @@ vim.o.relativenumber = true
 vim.opt.colorcolumn = "120"
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Set tab length
 vim.o.shiftwidth = 4
@@ -469,6 +476,7 @@ mason_lspconfig.setup_handlers {
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
+require("luasnip.loaders.from_vscode").load { paths = "./snippets" }
 luasnip.config.setup {}
 
 cmp.setup {
