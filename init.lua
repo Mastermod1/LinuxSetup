@@ -307,7 +307,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vim', 'starlark' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -434,7 +434,13 @@ local cwd = vim.fn.getcwd()
 vim.cmd("set path+=" .. cwd)
 
 local servers = {
-  clangd = {},
+  clangd = {
+    cmd = {"clangd",
+      "--background-index",
+      "--log=verbose",
+      -- "--query-driver=/home/mastermod1/.platformio/packages/toolchain-xtensa-esp32s3/bin/xtensa-esp32s3-elf-gcc*,/home/mastermod1/.platformio/packages/toolchain-xtensa-esp32s3/bin/xtensa-esp32s3-elf-g++*"
+    }
+  },
   pylsp = {
     {
       pylint = {
@@ -449,12 +455,15 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  bzl = {},
+  cmake = {},
 }
 
 local tools = {
   ["clang-format"] = {},
   buildifier = {},
   cmakelang = {},
+  cmakelint = {},
 }
 
 -- Setup neovim lua configuration
@@ -489,12 +498,12 @@ mason_lspconfig.setup_handlers {
 }
 
 -- Cpp clangd setup
-require'lspconfig'.clangd.setup{
-  capabilities = capabilities,
-  on_attach = on_attach,
-  cmd = { "/usr/bin/clangd-12" },
-  filetypes = {'c', 'cpp', 'objc', 'objcpp'}
-}
+-- require'lspconfig'.clangd.setup{
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   cmd = { "/usr/bin/clangd-16" },
+--   filetypes = {'c', 'cpp', 'objc', 'objcpp'}
+-- }
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
