@@ -31,6 +31,10 @@ mkdir -p ~/.config/nvim
 yes | cp -rf init.lua ~/.config/nvim/init.lua
 yes | cp -rf snippets ~/.config/nvim/
 
+git config --global core.editor "nvim"
+git config --global user.name "Daniel Kalmucki"
+git config --global user.email ""
+
 # GNOME SETTINGS
 # sudo apt install yaru-theme-icon yaru-theme-gnome-shell yaru-theme-gtk yaru-theme-unity
 # get color schema VS CODE Dark +

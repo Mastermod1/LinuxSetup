@@ -3,7 +3,7 @@
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$PATH:/usr/local/go/bin:/home/mastermod1/.local/bin"
+export PATH="/home/mastermod1/.local/bin:$PATH:/usr/local/go/bin"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -119,6 +119,10 @@ prompt_context() {
 alias gitlog="git log --graph --all --abbrev-commit --decorate"
 alias grepp="grep -rwns"
 alias difff="diff -W $COLUMNS --suppress-common-lines -y"
+
+function test() {
+    g++ -g -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -fsanitize=address,undefined main.cpp && ./a.out < input
+}
 
 function lookfor() {
     find . -type f -iname "*$1*" 2>/dev/null 
